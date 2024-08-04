@@ -1,5 +1,5 @@
 // src/components/UserTable.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +17,7 @@ const UserTable = ({
   usersPerPage,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [editingId, setEditingId] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
   const [errors, setErrors] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -67,16 +67,17 @@ const UserTable = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleEdit = (index) => {
-    setEditingIndex(index);
+  const handleEdit = (id) => {
+    setEditingId(id);
+    const index = users.findIndex((user) => user.id === id);
     setEditingUser(users[index]);
     openModal();
   };
 
   const handleSave = () => {
     if (validate()) {
-      updateUser(editingIndex, editingUser);
-      setEditingIndex(null);
+      updateUser(editingId, editingUser);
+      setEditingId(null);
       setEditingUser(null);
       closeModal();
     }
@@ -121,9 +122,9 @@ const UserTable = ({
     .sort((a, b) => {
       if (sortConfig.key) {
         if (sortConfig.direction === "asc") {
-          return a[sortConfig.key] > b[sortConfig.key] ? 1 : -1;
+          return a[sortConfig.key].toLowerCase() > b[sortConfig.key].toLowerCase() ? 1 : -1;
         } else {
-          return a[sortConfig.key] < b[sortConfig.key] ? 1 : -1;
+          return a[sortConfig.key].toLowerCase() < b[sortConfig.key].toLowerCase() ? 1 : -1;
         }
       }
       return 0;
@@ -204,9 +205,9 @@ const UserTable = ({
             </tr>
           </thead>
           <tbody className="bg-gray-800 divide-y divide-gray-700">
-            {currentUsers.map((user, index) => (
+            {currentUsers.map((user) => (
               <tr
-                key={index}
+                key={user.id}
                 className="hover:bg-gray-700 transition duration-300"
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-300">
@@ -235,13 +236,13 @@ const UserTable = ({
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   <button
-                    onClick={() => handleEdit(startIndex + index)}
+                    onClick={() => handleEdit(user.id)}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded transition-colors"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => deleteUser(startIndex + index)}
+                    onClick={() => deleteUser(user.id)}
                     className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded ml-2 transition-colors"
                   >
                     Delete
@@ -364,6 +365,8 @@ const UserTable = ({
                   onChange={handleChange}
                   className="px-4 py-2 border border-gray-700 rounded bg-black text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
                 />
+                {errors.city && (
+                  <span className="text-red-500">{errors.city}</span> ) }
               </div>
               <div className="flex flex-col w-full sm:w-full md:w-1/3">
                 <label>District:</label>
@@ -374,6 +377,8 @@ const UserTable = ({
                   onChange={handleChange}
                   className="px-4 py-2 border border-gray-700 rounded bg-black text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
                 />
+                {errors.district && (
+                  <span className="text-red-500">{errors.district}</span> ) }
               </div>
             </div>
 

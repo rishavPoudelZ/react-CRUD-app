@@ -8,19 +8,20 @@ function App() {
   const [users, setUsers] = useState([]);
 
   const addUser = (user) => {
+    user.id = new Date().getTime();
     const newUsers = [...users, user];
     setUsers(newUsers);
     localStorage.setItem("users", JSON.stringify(newUsers));
   };
 
-  const deleteUser = (index) => {
-    const newUsers = users.filter((_, i) => i !== index);
+  const deleteUser = (id) => {
+    const newUsers = users.filter((user) => user.id !== id);
     setUsers(newUsers);
     localStorage.setItem("users", JSON.stringify(newUsers));
   };
 
-  const updateUser = (index, updatedUser) => {
-    const newUsers = users.map((user, i) => (i === index ? updatedUser : user));
+  const updateUser = (id, updatedUser) => {
+    const newUsers = users.map((user) => (user.id === id ? updatedUser : user));
     setUsers(newUsers);
     localStorage.setItem("users", JSON.stringify(newUsers));
   };
