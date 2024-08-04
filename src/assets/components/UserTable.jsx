@@ -164,7 +164,7 @@ const UserTable = ({
             to="/profiles"
             className="px-4 py-2 my-2 bg-indigo-500 hover:bg-indigo-700 float-right rounded-sm transition-colors ml-auto"
           >
-            Show All Users
+            View Profiles
           </Link>
         ) : (
           <Link
