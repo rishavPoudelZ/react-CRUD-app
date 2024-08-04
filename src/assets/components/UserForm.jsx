@@ -18,6 +18,7 @@ const UserForm = ({ addUser, countries }) => {
   });
   const [imageSrc, setImageSrc] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const [success , setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -96,6 +97,10 @@ const UserForm = ({ addUser, countries }) => {
       setImageSrc(null);
       setFileName(null);
       setErrors({});
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 2000);
     }
   };
 
@@ -280,7 +285,7 @@ const UserForm = ({ addUser, countries }) => {
           </div>
         )}
       </div>
-
+      { success && <div className="text-green-500">User Added ✔</div>}
       <div>
         <button
           type="submit"
